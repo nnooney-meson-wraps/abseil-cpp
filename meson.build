@@ -22,10 +22,10 @@ absl_base_sources = files(
   'absl/base/log_severity.cc',
 )
 
-absl_containers_sources = files(
-  'absl/containers/internal/hashtablez_sampler_force_weak_definition.cc',
-  'absl/containers/internal/hashtablez_sampler.cc',
-  'absl/containers/internal/raw_hash_set.cc',
+absl_container_sources = files(
+  'absl/container/internal/hashtablez_sampler_force_weak_definition.cc',
+  'absl/container/internal/hashtablez_sampler.cc',
+  'absl/container/internal/raw_hash_set.cc',
 )
 
 absl_debugging_sources = files(

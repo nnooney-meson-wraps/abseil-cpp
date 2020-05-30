@@ -91,6 +91,7 @@ absl_strings_sources = files(
   'absl/strings/escaping.cc',
   'absl/strings/internal/charconv_bigint.cc',
   'absl/strings/internal/charconv_parse.cc',
+  'absl/strings/internal/escaping.cc',
   'absl/strings/internal/memutil.cc',
   'absl/strings/internal/ostringstream.cc',
   'absl/strings/internal/pow10_helper.cc',
@@ -149,71 +150,94 @@ absl_types_sources = files(
 absl_base_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_base_sources,
-  dependencies: dependency('threads'),
-)
-
-absl_container_dep = declare_dependency(
-  include_directories: absl_include_dir,
-  sources: absl_container_sources,
-  dependencies: dependency('threads'),
+  dependencies: [dependency('threads')],
 )
 
 absl_debugging_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_debugging_sources,
-  dependencies: dependency('threads'),
-)
-
-absl_flags_dep = declare_dependency(
-  include_directories: absl_include_dir,
-  sources: absl_flags_sources,
-  dependencies: dependency('threads'),
+  dependencies: [
+    absl_base_dep,
+  ],
 )
 
 absl_hash_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_hash_sources,
-  dependencies: dependency('threads'),
+  dependencies: [],
 )
 
 absl_numeric_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_numeric_sources,
-  dependencies: dependency('threads'),
-)
-
-absl_random_dep = declare_dependency(
-  include_directories: absl_include_dir,
-  sources: absl_random_sources,
-  dependencies: dependency('threads'),
-)
-
-absl_status_dep = declare_dependency(
-  include_directories: absl_include_dir,
-  sources: absl_status_sources,
-  dependencies: dependency('threads'),
+  dependencies: [],
 )
 
 absl_strings_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_strings_sources,
-  dependencies: dependency('threads'),
+  dependencies: [
+    absl_base_dep,
+    absl_numeric_dep,
+  ],
 )
 
-absl_synchronization_dep = declare_dependency(
+absl_random_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_synchronization_sources,
-  dependencies: dependency('threads'),
+  sources: absl_random_sources,
+  dependencies: [
+    absl_base_dep,
+    absl_strings_dep,
+  ],
 )
 
 absl_time_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_time_sources,
-  dependencies: dependency('threads'),
+  dependencies: [
+    absl_numeric_dep,
+    absl_strings_dep,
+  ],
 )
 
 absl_types_dep = declare_dependency(
   include_directories: absl_include_dir,
   sources: absl_types_sources,
-  dependencies: dependency('threads'),
+  dependencies: [],
+)
+
+absl_synchronization_dep = declare_dependency(
+  include_directories: absl_include_dir,
+  sources: absl_synchronization_sources,
+  dependencies: [
+    absl_debugging_dep,
+    absl_time_dep,
+  ],
+)
+
+absl_flags_dep = declare_dependency(
+  include_directories: absl_include_dir,
+  sources: absl_flags_sources,
+  dependencies: [
+    absl_base_dep,
+    absl_synchronization_dep,
+    absl_strings_dep,
+  ],
+)
+
+absl_container_dep = declare_dependency(
+  include_directories: absl_include_dir,
+  sources: absl_container_sources,
+  dependencies: [
+    absl_hash_dep,
+    absl_synchronization_dep,
+  ],
+)
+
+absl_status_dep = declare_dependency(
+  include_directories: absl_include_dir,
+  sources: absl_status_sources,
+  dependencies: [
+    absl_strings_dep,
+  ],
 )

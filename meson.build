@@ -2,6 +2,8 @@ project('abseil-cpp', 'cpp',
   version: '20200225.2',
   license: 'Apache-2.0')
 
+add_project_arguments('-Wno-sign-compare', language: 'cpp')
+
 absl_include_dir = include_directories('.')
 
 # Group files by the containing library
@@ -146,98 +148,172 @@ absl_types_sources = files(
   'absl/types/bad_variant_access.cc',
 )
 
+# Libraries
+absl_base_lib = library(
+  'absl_base_lib',
+  absl_base_sources,
+  include_directories: absl_include_dir,
+  dependencies: [dependency('threads')],
+)
+
+absl_debugging_lib = library(
+  'absl_debugging_lib',
+  absl_debugging_sources,
+  include_directories: absl_include_dir,
+  link_with: absl_base_lib,
+)
+
+absl_hash_lib = library(
+  'absl_hash_lib',
+  absl_hash_sources,
+  include_directories: absl_include_dir,
+)
+
+absl_numeric_lib = library(
+  'absl_numeric_lib',
+  absl_numeric_sources,
+  include_directories: absl_include_dir,
+)
+
+absl_strings_lib = library(
+  'absl_strings_lib',
+  absl_strings_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_numeric_lib,
+  ],
+)
+
+absl_random_lib = library(
+  'absl_random_lib',
+  absl_random_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_strings_lib,
+  ],
+)
+
+absl_time_lib = library(
+  'absl_time_lib',
+  absl_time_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_numeric_lib,
+    absl_strings_lib,
+  ],
+)
+
+absl_types_lib = library(
+  'absl_types_lib',
+  absl_types_sources,
+  include_directories: absl_include_dir,
+)
+
+absl_synchronization_lib = library(
+  'absl_synchronization_lib',
+  absl_synchronization_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_debugging_lib,
+    absl_time_lib,
+  ],
+)
+
+absl_flags_lib = library(
+  'absl_flags_lib',
+  absl_flags_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_synchronization_lib,
+    absl_strings_lib,
+  ],
+)
+
+absl_container_lib = library(
+  'absl_container_lib',
+  absl_container_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_debugging_lib,
+    absl_hash_lib,
+    absl_synchronization_lib,
+    absl_time_lib,
+  ],
+)
+
+absl_status_lib = library(
+  'absl_status_lib',
+  absl_status_sources,
+  include_directories: absl_include_dir,
+  link_with: [
+    absl_base_lib,
+    absl_strings_lib,
+  ],
+)
+
 # Dependencies
 absl_base_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_base_sources,
-  dependencies: [dependency('threads')],
+  link_with: absl_base_lib,
 )
 
 absl_debugging_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_debugging_sources,
-  dependencies: [
-    absl_base_dep,
-  ],
+  link_with: absl_debugging_lib,
 )
 
 absl_hash_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_hash_sources,
-  dependencies: [],
+  link_with: absl_hash_lib,
 )
 
 absl_numeric_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_numeric_sources,
-  dependencies: [],
+  link_with: absl_numeric_lib,
 )
 
 absl_strings_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_strings_sources,
-  dependencies: [
-    absl_base_dep,
-    absl_numeric_dep,
-  ],
+  link_with: absl_strings_lib,
 )
 
 absl_random_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_random_sources,
-  dependencies: [
-    absl_base_dep,
-    absl_strings_dep,
-  ],
+  link_with: absl_random_lib,
 )
 
 absl_time_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_time_sources,
-  dependencies: [
-    absl_numeric_dep,
-    absl_strings_dep,
-  ],
+  link_with: absl_time_lib,
 )
 
 absl_types_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_types_sources,
-  dependencies: [],
+  link_with: absl_types_lib,
 )
 
 absl_synchronization_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_synchronization_sources,
-  dependencies: [
-    absl_debugging_dep,
-    absl_time_dep,
-  ],
+  link_with: absl_synchronization_lib,
 )
 
 absl_flags_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_flags_sources,
-  dependencies: [
-    absl_base_dep,
-    absl_synchronization_dep,
-    absl_strings_dep,
-  ],
+  link_with: absl_flags_lib,
 )
 
 absl_container_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_container_sources,
-  dependencies: [
-    absl_hash_dep,
-    absl_synchronization_dep,
-  ],
+  link_with: absl_container_lib,
 )
 
 absl_status_dep = declare_dependency(
   include_directories: absl_include_dir,
-  sources: absl_status_sources,
-  dependencies: [
-    absl_strings_dep,
-  ],
+  link_with: absl_status_lib,
 )

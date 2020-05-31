@@ -266,6 +266,9 @@ absl_base_dep = declare_dependency(
 absl_debugging_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_debugging_lib,
+  dependencies: [
+    absl_base_dep,
+  ],
 )
 
 absl_hash_dep = declare_dependency(
@@ -281,16 +284,29 @@ absl_numeric_dep = declare_dependency(
 absl_strings_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_strings_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_numeric_dep,
+  ],
 )
 
 absl_random_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_random_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_strings_dep,
+  ],
 )
 
 absl_time_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_time_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_numeric_dep,
+    absl_strings_dep,
+  ],
 )
 
 absl_types_dep = declare_dependency(
@@ -301,19 +317,40 @@ absl_types_dep = declare_dependency(
 absl_synchronization_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_synchronization_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_debugging_dep,
+    absl_time_dep,
+  ],
 )
 
 absl_flags_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_flags_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_strings_dep,
+    absl_synchronization_dep,
+  ],
 )
 
 absl_container_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_container_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_debugging_dep,
+    absl_hash_dep,
+    absl_synchronization_dep,
+    absl_time_dep,
+  ],
 )
 
 absl_status_dep = declare_dependency(
   include_directories: absl_include_dir,
   link_with: absl_status_lib,
+  dependencies: [
+    absl_base_dep,
+    absl_strings_dep,
+  ],
 )
